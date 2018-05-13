@@ -1,42 +1,19 @@
 import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
-import java.util.Iterator;
+import edu.princeton.cs.algs4.StdRandom;
 
+	
 public class Permutation {
-	
-	private Iterator<String> iterator;
-	private RandomizedQueue randObj;
-	
-	public Permutation() {
-		randObj = new RandomizedQueue();
-		iterator = randObj.iterator();
-	}
-	
-	private void insert(String item) {
-		randObj.enqueue(item);
-	}
-	
-	private Iterator<String> getIterator() {
-		return iterator;
-	}
-	
-	private void iterate(int n) {
-		while (n != 0) {
-			StdOut.println(iterator.next());
-			n--;
-		}
-	}
-	
 	public static void main(String[] args) {
-		Permutation perm = new Permutation();
-		int k = StdIn.readInt();
-			
+		int k = Integer.parseInt(args[0]);
+		RandomizedQueue<String> rq = new RandomizedQueue<>();
+		
 		while (!StdIn.isEmpty()) {
-			String item = StdIn.readString();
-			perm.insert(item);
+			rq.enqueue(StdIn.readString());
 		}
 		
-		perm.iterate(k);
-	   
+		for (int i = 0; i < k; i++) {
+			StdOut.println(rq.dequeue());
+		}
 	}
 }
