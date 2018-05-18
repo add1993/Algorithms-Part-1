@@ -2,16 +2,19 @@ import java.util.Comparator;
 import edu.princeton.cs.algs4.StdDraw;
 
 public final class Point implements Comparable<Point> {
+	public static final Comparator<Point> BY_SLOPE_ORDER = new BySlopeOrder();
 	private final int x;
 	private final int y;
+	private static Point pointObject;
 	
 	public Point(int x, int y) {
 		this.x = x;
 		this.y = y;
+		pointObject = this;
 	}
 
 	public void draw() {
-		StdDraw.point(x, y)
+		StdDraw.point(x, y);
 	}
 	
 	public void drawTo(Point that) {
@@ -42,11 +45,12 @@ public final class Point implements Comparable<Point> {
 		}
 	}
 	
-	private static class bySlopeOrder implements Comparator<Point> {
+	private static class BySlopeOrder implements Comparator<Point> {
+		
 		public int compare(Point A, Point B) {
-			if (A.compareTo(this) > B.compareTo(this)) {
+			if (pointObject.slopeTo(A)-pointObject.slopeTo(B) > 0) {
 				return 1;
-			} else if (A.compareTo(this) < B.compareTo(this)) {
+			} else if (pointObject.slopeTo(A)-pointObject.slopeTo(B) < 0) {
 				return -1;
 			} else {
 				return 0;
@@ -55,6 +59,6 @@ public final class Point implements Comparable<Point> {
 	}
 	
 	public Comparator<Point> slopeOrder() {
-		return new bySlopeOrder();
+		return new BySlopeOrder();
 	}
 }

@@ -1,20 +1,22 @@
 public class BruteCollinearPoints {
 	
 	int numberOfSegments;
-	LineSegment[] lineSegment;
+	LineSegment lineSegment[];
 	
 	public BruteCollinearPoints(Point[] points) {
 		if (points == null) {
 			throw new java.lang.IllegalArgumentException("Constructor arguments are null");
 		}
 		
-		int slopes[4];
+		double slopes[] = new double[4];
+		lineSegment = new LineSegment[25];
 		numberOfSegments = 0;
+		
 		for (int i = 0; i < points.length; i++) {
 			for (int j = 0; j < points.length; j++) {
 				for (int k = 0; k < points.length; k++) {
 					for (int l = 0; l < points.length; l++) {
-						if (i == j && j == k && k == l && i == l) {
+						if (i == j || j == k || k == l || i == l) {
 							continue;
 						}
 						slopes[0] = points[i].slopeTo(points[j]);
@@ -23,8 +25,7 @@ public class BruteCollinearPoints {
 						slopes[3] = points[l].slopeTo(points[i]);
 						
 						if (slopes[0] == slopes[1] && slopes[1] == slopes[2] && slopes[3] == slopes[0]) {
-							numberOfSegments++;
-							break;
+							lineSegment[numberOfSegments++] = new LineSegment(points[i], points[l]);
 						}
 					}
 				}
