@@ -1,31 +1,34 @@
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.In;
 import java.util.Arrays;
 import java.util.ArrayList;
 
 public class BruteCollinearPoints {
 	
-	private int numberOfSegments;
 	private LineSegment lineSegment[];
 	
 	public BruteCollinearPoints(Point[] points) {
-		Point[] pointsCopy = Arrays.copyOf(points, points.length);
-		Arrays.sort(pointsCopy);
-		
-		ArrayList<LineSegment> segments = new ArrayList<LineSegment>();
-		
-		for (int i = 0; i < pointsCopy.length; i++) {
-			if (pointsCopy[i] == null) {
+		if (points == null) {
+			throw new java.lang.IllegalArgumentException("Constructor arguments are null");
+		}
+		for (int i = 0; i < points.length; i++) {
+			if (points[i] == null) {
 				throw new java.lang.IllegalArgumentException("Constructor arguments are null");
 			}
-			
-			if (i != pointsCopy.length-1 && pointsCopy[i].compareTo(pointsCopy[i+1]) == 0) {
+		}
+		
+		Point[] pointsCopy = Arrays.copyOf(points, points.length);
+		Arrays.sort(pointsCopy);
+		for (int i = 0; i < pointsCopy.length-1; i++) {
+			if (pointsCopy[i].compareTo(pointsCopy[i+1]) == 0) {
 				throw new java.lang.IllegalArgumentException("Duplicated entries in given points.");
 			}
 		}
 
+		ArrayList<LineSegment> segments = new ArrayList<LineSegment>();
+
 		double slopes[] = new double[4];
-		numberOfSegments = 0;
 		
 		for (int i = 0; i < pointsCopy.length-3; i++) {
 			for (int j = i+1; j < pointsCopy.length-2; j++) {
@@ -37,7 +40,6 @@ public class BruteCollinearPoints {
 						slopes[3] = pointsCopy[l].slopeTo(pointsCopy[i]);
 						
 						if (slopes[0] == slopes[1] && slopes[1] == slopes[2] && slopes[3] == slopes[0]) {
-							numberOfSegments++;
 							segments.add(new LineSegment(pointsCopy[i], pointsCopy[l]));
 						}
 					}
@@ -49,11 +51,11 @@ public class BruteCollinearPoints {
 	}    // finds all line segments containing 4 points
 	
 	public int numberOfSegments() {
-		return numberOfSegments;
+		return lineSegment.length;
 	}// the number of line segments
 	
 	public LineSegment[] segments() {
-		return lineSegment;
+		return Arrays.copyOf(lineSegment, numberOfSegments());
 	}// the line segments
 	
 	/* public static void main(String[] args) {
