@@ -5,104 +5,86 @@ import java.util.Arrays;
 import java.util.ArrayList;
 
 public class FastCollinearPoints {
-	
-	private int numberOfSegments;
 	private LineSegment []lineSegment;
 	
+	// finds all line segments containing 4 or more points
 	public FastCollinearPoints(Point[] points) {
-		Point[] pointsCopy = Arrays.copyOf(points, points.length);
-		ArrayList<LineSegment> segments = new ArrayList<LineSegment>();
-		ArrayList<Point> skipList = new ArrayList<Point>();
-		ArrayList<Point> tmpList = new ArrayList<Point>();
+		if (points == null) {
+			throw new java.lang.IllegalArgumentException("Constructor arguments are null");
+		}
 		
-		for (int i = 0; i < pointsCopy.length; i++) {
-			if (pointsCopy[i] == null) {
+		for (int i = 0; i < points.length; i++) {
+			if (points[i] == null) {
 				throw new java.lang.IllegalArgumentException("Constructor arguments are null");
 			}
-			
-			if (i != pointsCopy.length-1 && pointsCopy[i].compareTo(pointsCopy[i+1]) == 0) {
-				throw new java.lang.IllegalArgumentException("Duplicated entries in given points.");
-			}
 		}
 		
-		numberOfSegments = 0;
+		Point[] pointsCopy = Arrays.copyOf(points, points.length);
+		ArrayList<LineSegment> segments = new ArrayList<LineSegment>();
 
-		int slope_index;
-		// double slope[] = new double[pointsCopy.length];
+		LineSegment line;
+		int end_index, start_index;
+		Point P, PStart, PEnd; 
 		
-		LineSegment line1, line2;
-		double slope;
-		int end_index, start_index, isPart, repCount;
 		for (int j = 0; j < pointsCopy.length; j++) {
 			Arrays.sort(pointsCopy);
-			Arrays.sort(pointsCopy, pointsCopy[j].slopeOrder());
-			// StdOut.println("For point");
-			// StdOut.println(pointsCopy[j].toString());
-			for (int i = 1; i < pointsCopy.length; i++) {
-				slope_index = 0;
-				end_index = 1;
-				start_index = i;
-				isPart = 0;
-				repCount = 0;
-				slope = pointsCopy[0].slopeTo(pointsCopy[i]);
+			P = pointsCopy[j];
+			Arrays.sort(pointsCopy, P.slopeOrder());
+			start_index = 0;
+			
+			while (start_index < pointsCopy.length && P.slopeTo(pointsCopy[start_index]) == Double.NEGATIVE_INFINITY) {
+				start_index++;
+			}
+			
+			if (start_index != 1) {
+				throw new java.lang.IllegalArgumentException("Duplicate Values found");
+			}
+
+			end_index = start_index;
+			
+			while (start_index < pointsCopy.length) {
+				while (end_index < pointsCopy.length && P.slopeTo(pointsCopy[start_index]) == P.slopeTo(pointsCopy[end_index])) {
+					end_index++;
+				}
 				
-				// slope[slope_index++] = pointsCopy[0].slopeTo(pointsCopy[i]);
-				// if (!skipList.contains(pointsCopy[i])) {
-				//	tmpList.add(pointsCopy[i]);
-				// }
-				while (i < pointsCopy.length && slope == pointsCopy[0].slopeTo(pointsCopy[i])) {
-					if (!(skipList.contains(pointsCopy[i]) && repCount > 1)) {
-						tmpList.add(pointsCopy[i]);
-						end_index = i;
-						slope_index++;
+				if (end_index - start_index >= 3) {
+					if (P.compareTo(pointsCopy[start_index]) < 0) {
+						PStart = P;
 					} else {
-						repCount++;
-						
-						if (repCount > 1) {
-							isPart = 1;
-						}
+						PStart = pointsCopy[start_index];
 					}
-					i++;
-				}
-				i--;
-				
-				if (slope_index >= 3 && isPart == 0) {
-					if (!(skipList.contains(pointsCopy[end_index])&&skipList.contains(pointsCopy[0]))) {
-						numberOfSegments++;
-						//StdOut.println("Equal slope points");
-						//StdOut.println("pointsCopy[0] -> "+pointsCopy[0]);
-						//for (int l = start_index; l <= end_index; l++) {
-						//	StdOut.print(pointsCopy[l].toString()+"->");
-						//}
-						
-						if (pointsCopy[0].compareTo(pointsCopy[start_index]) < 0) {
-							start_index = 0;
-						}
-						
-						line1 = new LineSegment(pointsCopy[start_index], pointsCopy[end_index]);
-						segments.add(line1);
-						skipList.addAll(tmpList);
-						//StdOut.print("Created line segment : ");
-						//StdOut.println(line1);
+					
+					if (P.compareTo(pointsCopy[end_index-1]) > 0) {
+						PEnd = P;
+					} else {
+						PEnd = pointsCopy[end_index-1];
+					}
+					
+					// To remove the repeated line segments
+					if (P == PStart) {
+						line = new LineSegment(PStart, PEnd);
+						segments.add(line);
 					}
 				}
-				tmpList.clear();
+				start_index = end_index;
 			}
 		}
+		
 		lineSegment = new LineSegment[segments.size()];
 		lineSegment = segments.toArray(lineSegment);
-	}     // finds all line segments containing 4 or more points
+	}
 	
+	// the number of line segments
 	public int numberOfSegments() {
-		return numberOfSegments;
-	}        // the number of line segments
+		return lineSegment.length;
+	}
 	
+	// the line segments
 	public LineSegment[] segments()  {
-		return lineSegment;
-	}               // the line segments
+		return Arrays.copyOf(lineSegment, numberOfSegments());
+	}
 	
 	public static void main(String[] args) {
-
 		// read the n points from a file
 		In in = new In(args[0]);
 		int n = in.readInt();

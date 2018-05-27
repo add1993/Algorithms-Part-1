@@ -3,7 +3,6 @@ import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdOut;
 
 public final class Point implements Comparable<Point> {
-	private final Comparator<Point> BY_SLOPE_ORDER = new BySlopeOrder();
 	private final int x;
 	private final int y;
 	
@@ -67,13 +66,8 @@ public final class Point implements Comparable<Point> {
 				throw new java.lang.NullPointerException("Argument is null");
 			}
 			double slopeA, slopeB;
-			// StdOut.println("PointObject "+obj.toString());
-			// StdOut.println("PointObject "+A.toString());
-			// StdOut.println("PointObject "+B.toString());
 			slopeA = slopeTo(A);
 			slopeB = slopeTo(B);
-			// StdOut.println("slopeA "+slopeA);
-			// StdOut.println("slopeB "+slopeB);
 			
 			if (slopeA > slopeB) {
 				return 1;
@@ -89,7 +83,7 @@ public final class Point implements Comparable<Point> {
 		return new BySlopeOrder();
 	}
 	
-	/* public static void main(String args[]) {
+	public static void main(String args[]) {
 		Point p = new Point(411, 45);
 		Point q = new Point(295, 359);
 		Point r = new Point(436, 311);
@@ -97,5 +91,5 @@ public final class Point implements Comparable<Point> {
 		StdOut.println("p.compare(q, r) " + p.slopeOrder().compare(q, r));
 		StdOut.println("p.slopeTo(q) " + p.slopeTo(q));
 		StdOut.println("p.slopeTo(r) " + p.slopeTo(r));
-	} */
+	}
 }

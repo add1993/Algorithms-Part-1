@@ -8,10 +8,12 @@ public class BruteCollinearPoints {
 	
 	private LineSegment lineSegment[];
 	
+	// finds all line segments containing 4 points
 	public BruteCollinearPoints(Point[] points) {
 		if (points == null) {
 			throw new java.lang.IllegalArgumentException("Constructor arguments are null");
 		}
+		
 		for (int i = 0; i < points.length; i++) {
 			if (points[i] == null) {
 				throw new java.lang.IllegalArgumentException("Constructor arguments are null");
@@ -48,17 +50,19 @@ public class BruteCollinearPoints {
 		}
 		lineSegment = new LineSegment[segments.size()];
 		lineSegment = segments.toArray(lineSegment);
-	}    // finds all line segments containing 4 points
+	}
 	
+	// the number of line segments
 	public int numberOfSegments() {
 		return lineSegment.length;
-	}// the number of line segments
+	}
 	
+	// the line segments
 	public LineSegment[] segments() {
 		return Arrays.copyOf(lineSegment, numberOfSegments());
-	}// the line segments
+	}
 	
-	/* public static void main(String[] args) {
+	public static void main(String[] args) {
 
 		// read the n points from a file
 		In in = new In(args[0]);
@@ -87,5 +91,5 @@ public class BruteCollinearPoints {
 			segment.draw();
 		}
 		StdDraw.show();
-	} */
+	}
 }
